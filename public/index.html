@@ -1,0 +1,61 @@
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestão de Projetos</title>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-cookies/angular-cookies.min.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="lib/angular-ui-router.stateHelper/statehelper.min.js"></script>
+
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://bootswatch.com/sandstone/bootstrap.min.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+  </head>
+  <body ng-controller="MainCtrl">
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+            <span>Gestão de Projetos</span>
+          </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+          <ul class="nav navbar-nav navbar-right" ng-if="usuario">
+            <li class="active" ng-click="sair()">
+              <a href="#">Sair</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- menu -->
+          <div class="col-md-2" ng-include="'views/menu.html'" ng-if="usuario"></div>
+
+          <!-- conteudo -->
+          <div ng-class="usuario?'col-md-10':'col-md-12'">
+            <div class="row">
+              <div ui-view="conteudo"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="javascripts/app.js"></script>
+    <script src="javascripts/mainCtrl.js"></script>
+    <script src="javascripts/usuariosCtr.js"></script>
+  </body>
+</html>

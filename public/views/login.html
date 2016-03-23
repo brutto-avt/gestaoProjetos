@@ -1,0 +1,14 @@
+<div class="container">
+  <form class="form-signin" ng-submit="autenticar()">
+    <h2 class="form-signin-heading">Login</h2>
+
+    <label for="inputUsuario" class="sr-only">Usuário</label>
+    <input ng-model="formLogin.login" type="text" id="inputUsuario" class="form-control" placeholder="Usuário" required autofocus>
+
+    <label for="inputSeha" class="sr-only">Senha</label>
+    <input ng-model="formLogin.senha" type="password" id="inputSenha" class="form-control" placeholder="Senha" required>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+  </form>
+
+</div>

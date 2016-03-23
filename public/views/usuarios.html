@@ -1,0 +1,22 @@
+<a class="btn btn-success pull-right" ui-sref="usuarios.detalhe({'usuarioId': 'novo'})">
+  <i class="fa fa-plus fa-fw"></i>Novo Membro
+</a>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Perfil</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="usr in usuarios" ng-click="detalhe(usr)">
+      <td>{{ usr.nome }}</td>
+      <td>{{ usr.email }}</td>
+      <td>{{ getPerfil(usr) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div ui-view></div>

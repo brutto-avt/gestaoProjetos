@@ -1,0 +1,28 @@
+<ul class="nav nav-pills nav-stacked">
+<li class="active">
+  <a ui-sref="inicio">Início</a>
+</li>
+<li role="presentation" class="dropdown" ng-if="perfil == 2">
+  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+    Cadastros
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <a ui-sref="usuarios">Equipe</a>
+    </li>
+    <li>
+      <a href="#">Atividades</a>
+    </li>
+  </ul>
+</li>
+<li ng-if="perfil == 1 || perfil == 2">
+  <a href="#">Projetos</a>
+</li>
+<li>
+  <a href="#">Itens</a>
+</li>
+<li>
+  <a href="#">Opções</a>
+</li>
+</ul>
