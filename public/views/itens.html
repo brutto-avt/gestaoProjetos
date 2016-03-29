@@ -1,0 +1,24 @@
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Resumo</th>
+      <th>Deadline</th>
+      <th>Responsável</th>
+      <th>Prioridade</th>
+      <th>Status</th>
+      <th>Projeto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in itens" ng-click="detalhe(item)">
+      <td>{{ item.resumo }}</td>
+      <td>{{ item.deadline | date:'dd/MM/yyyy' }}</td>
+      <td>{{ item.responsavel.nome }}</td>
+      <td>{{ getPrioridade(item) }}</td>
+      <td>{{ getSituacao(item) }}</td>
+      <td>{{ item.projeto.nome }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div ui-view></div>

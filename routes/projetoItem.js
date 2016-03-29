@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
   ProjetoItem.find(function(err, itens) {
     if(err) return next(err);
     res.json(itens);
-  });
+  }).populate('projeto').populate('responsavel');
 });
 
 router.get('/:id', function(req, res, next) {

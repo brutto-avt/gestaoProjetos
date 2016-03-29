@@ -1,3 +1,7 @@
 .table-hover tr {
   cursor: pointer;
 }
+
+.row.sem-margem {
+  margin: 0;
+}

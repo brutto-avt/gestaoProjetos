@@ -116,6 +116,36 @@ angular.module('app').config(function(stateHelperProvider, $urlRouterProvider) {
           ]
         }
       ]
+    })
+    .state({
+      name: 'itens',
+      url: '/itens',
+      views: {
+        'conteudo@': {
+          templateUrl: './views/itens.html',
+          controller: 'ItensCtr'
+        }
+      },
+      children: [{
+        name: 'detalhe',
+        url: '/:itemId',
+        views: {
+          'conteudo@': {
+            templateUrl: './views/itens.detalhe.html',
+            controller: 'ItensCtr'
+          }
+        },
+        children: [{
+          name: 'atualizar',
+          url: '/atualizar/:atividadeId',
+          views: {
+            'conteudo@': {
+              templateUrl: './views/itens.detalhe.atualizar.html',
+              controller: 'ItensCtr'
+            }
+          }
+        }]
+      }]
     });
 
 $urlRouterProvider.otherwise('/inicio');

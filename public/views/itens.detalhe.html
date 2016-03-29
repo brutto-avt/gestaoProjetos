@@ -1,0 +1,117 @@
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputResponsavel" class="control-label">Responsável</label>
+    </div>
+    <div class="col-sm-6">
+      <select class="form-control" id="inputResponsavel" ng-model="registro.responsavel">
+        <option value="{{ mem._id }}" ng-repeat="mem in membros">{{ mem.nome }}</option>
+      </select>
+    </div>
+
+    <div class="col-sm-1">
+      <label for="inputStatus" class="control-label">Situação</label>
+    </div>
+    <div class="col-sm-4">
+      <select class="form-control" id="inputStatus" ng-model="registro.status">
+        <option value="0">Pendente</option>
+        <option value="1">Em desenvolvimento</option>
+        <option value="2">Encerrado</option>
+        <option value="3">Cancelado</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputResumo" class="control-label">Resumo</label>
+    </div>
+    <div class="col-sm-7">
+      <input type="text" class="form-control" id="inputResumo" ng-model="registro.resumo" disabled>
+    </div>
+
+    <div class="col-sm-1">
+      <label for="inputDeadline" class="control-label">Deadline</label>
+    </div>
+    <div class="col-sm-3">
+      <input type="date" class="form-control" id="inputDeadline" ng-model="registro.deadline" disabled>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputProjeto" class="control-label">Projeto</label>
+    </div>
+    <div class="col-sm-6">
+      <select class="form-control" id="inputProjeto" ng-model="registro.projeto" disabled>
+        <option value="{{ pro._id }}" ng-repeat="pro in projetos">{{ pro.nome }}</option>
+      </select>
+    </div>
+
+    <div class="col-sm-1">
+      <label for="inputPrioridade" class="control-label">Prioridade</label>
+    </div>
+    <div class="col-sm-4">
+      <select class="form-control" id="inputPrioridade" ng-model="registro.prioridade" disabled>
+        <option value="0">Baixa</option>
+        <option value="1">Média</option>
+        <option value="2">Alta</option>
+        <option value="3">Urgente</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputDescricao" class="control-label">Descrição</label>
+    </div>
+    <div class="col-sm-11">
+      <textarea class="form-control" id="inputDescricao" ng-model="registro.descricao" disabled></textarea>
+    </div>
+  </div>
+
+  <div class="panel panel-primary" ng-if="registro.atividades">
+    <div class="panel-heading">
+      <h3 class="panel-title">Atividades</h3>
+    </div>
+    <div class="panel-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Atividade</th>
+            <th>Estimativa</th>
+            <th>% Concluído</th>
+            <th>Horas utilizadas</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="ativ in registro.atividades">
+            <td>{{ ativ.atividade.nome }}</td>
+            <td>{{ ativ.avaliacao }}</td>
+            <td>{{ getPercConcluido(ativ) }}</td>
+            <td>{{ getHorasUtilizadas(ativ) }}</td>
+            <td>
+              <a class="btn btn-xs btn-success pull-right" ui-sref=".atualizar({'atividadeId': ativ.atividade._id})">
+                <i class="fa fa-clock-o fa-fw"></i>Atualizar
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-success pull-right" ng-click="gravar()">
+        <i class="fa fa-fw fa-check"></i>Gravar</button>
+
+      <button type="submit" class="btn btn-danger pull-right" style="margin-right:10px" ng-click="excluir()" ng-if="registro._id">
+        <i class="fa fa-fw fa-trash"></i>Excluir</button>
+
+      <button type="submit" class="btn btn-danger pull-right" style="margin-right:10px" ng-click="voltar()">
+        <i class="fa fa-fw fa-close"></i>Cancelar</button>
+    </div>
+  </div>
+</form>

@@ -54,7 +54,7 @@
     <div class="col-sm-1">
       <label for="inputDescricao" class="control-label">Descrição</label>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-11">
       <textarea class="form-control" id="inputDescricao" ng-model="registro.itemSelecionado.descricao"></textarea>
     </div>
   </div>
@@ -67,7 +67,7 @@
       <a class="btn btn-success pull-right" ui-sref=".estimativas" style="margin-right:10px" ng-if="registro.itemSelecionado._id">
         <i class="fa fa-clock-o fa-fw"></i>Estimativas
       </a>
-      
+
       <button type="submit" class="btn btn-danger pull-right" style="margin-right:10px" ng-click="excluirItem()" ng-if="registro.itemSelecionado._id">
         <i class="fa fa-fw fa-trash"></i>Excluir</button>
 

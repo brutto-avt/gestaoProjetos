@@ -1,0 +1,27 @@
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputPercConcluido" class="control-label">% concluído</label>
+    </div>
+    <div class="col-sm-5">
+      <input type="number" step="1" max="100" class="form-control" id="inputPercConcluido" ng-model="atualizacao.percConcluido">
+    </div>
+
+    <div class="col-sm-1">
+      <label for="inputHorasUsadas" class="control-label">Horas utilizadas</label>
+    </div>
+    <div class="col-sm-5">
+      <input type="number" step="1" class="form-control" id="inputHorasUsadas" ng-model="atualizacao.horasUsadas">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-success pull-right" ng-click="gravarAtualizacao()">
+        <i class="fa fa-fw fa-check"></i>Gravar</button>
+
+      <button type="submit" class="btn btn-danger pull-right" style="margin-right:10px" ng-click="voltarAtualizacao()">
+        <i class="fa fa-fw fa-close"></i>Cancelar</button>
+    </div>
+  </div>
+</form>
