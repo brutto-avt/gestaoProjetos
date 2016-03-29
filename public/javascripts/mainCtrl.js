@@ -10,6 +10,7 @@ angular.module('app').controller('MainCtrl', function($scope, $rootScope, $timeo
     $http.post('./api/usuarios/autenticar', $scope.formLogin)
     .then(function(usuario) {
       $scope.usuario = usuario.data;
+      $scope.perfil = $cookies.get('perfil');
       $state.go('inicio');
     }, function (erro) {
       console.log(erro);

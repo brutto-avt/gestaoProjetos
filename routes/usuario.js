@@ -1,12 +1,10 @@
 require('../models/usuario');
-require('../models/usuarioAtividade');
 require('../models/atividade');
 
 var express = require('express');
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Usuario = mongoose.model('Usuario');
-var UsuarioAtividade = mongoose.model('UsuarioAtividade');
 var Atividade = mongoose.model('Atividade');
 var router = express.Router();
 
@@ -76,58 +74,6 @@ router.post('/autenticar', function(req, res, next) {
     res.cookie('usuario', usuario._id.toString());
     res.cookie('perfil', usuario.perfil);
     res.json(usuario);
-  });
-});
-
-// Atividades
-router.get('/:id/atividades', function(req, res, next) {
-  var query = UsuarioAtividade.find({'usuario': req.params.id});
-
-  query.exec(function(err, atividades) {
-    if (err) return next(err);
-    res.json(atividades);
-  });
-});
-
-router.get('/:id/atividades/:atividadeId', function(req, res, next) {
-  var query = UsuarioAtividade.findById(req.params.atividadeId).populate('usuario atividade');
-
-  query.exec(function(err, atividade) {
-    if (err) return next(err);
-    if (!atividade) return next(new Error('atividade não encontrada'));
-    res.json(atividade);
-  });
-});
-
-router.post('/:id/atividades', function(req, res, next) {
-  var atividade = new UsuarioAtividade(req.body);
-
-  atividade.usuario = req.params.id;
-
-  atividade.save(function(err, atividade){
-    if(err) return next(err);
-    res.json(atividade);
-  });
-});
-
-router.put('/:id/atividades', function(req, res, next) {
-  var query = {'_id': req.body._id};
-
-  UsuarioAtividade.findOneAndUpdate(query, req.body, {new: true}, function(err, atividade) {
-    if (err) return next(err);
-    if (!atividade) return next(new Error('atividade não encontrada'));
-    res.json(atividade);
-  });
-});
-
-router.delete('/:id/atividades/:atividadeId', function(req, res, next) {
-  var query = UsuarioAtividade.findById(req.params.atividadeId);
-
-  query.exec(function(err, atividade) {
-    if (err) return next(err);
-    if (!atividade) return next(new Error('atividade não encontrada'));
-    atividade.remove();
-    res.json(atividade);
   });
 });
 

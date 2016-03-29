@@ -1,0 +1,20 @@
+<a class="btn btn-success pull-right" ui-sref=".detalhe({'estimativaId': 'novo'})">
+  <i class="fa fa-plus fa-fw"></i>Nova Estimativa
+</a>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Atividade</th>
+      <th>Tempo (h)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="est in estimativas" ng-click="detalhe(est)">
+      <td>{{ est.atividade.nome }}</td>
+      <td>{{ est.avaliacao }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div ui-view></div>

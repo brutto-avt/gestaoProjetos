@@ -1,0 +1,94 @@
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputNome" class="control-label">Nome</label>
+    </div>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" id="inputNome" ng-model="registro.nome">
+    </div>
+    <div class="col-sm-1">
+      <label for="inputPrioridade" class="control-label">Prioridade</label>
+    </div>
+    <div class="col-sm-2">
+      <select class="form-control" id="inputPrioridade" ng-model="registro.prioridade">
+        <option value="0">Baixa</option>
+        <option value="1">Média</option>
+        <option value="2">Alta</option>
+        <option value="3">Urgente</option>
+      </select>
+    </div>
+    <div class="col-sm-1">
+      <label for="inputDeadline" class="control-label">Deadline</label>
+    </div>
+    <div class="col-sm-2">
+      <input type="date" class="form-control" id="inputDeadline" ng-model="registro.deadline">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-1">
+      <label for="inputResponsavel" class="control-label">Responsável</label>
+    </div>
+    <div class="col-sm-5">
+      <select class="form-control" id="inputResponsavel" ng-model="registro.responsavel">
+        <option value="{{ usr._id }}" ng-repeat="usr in lideres">{{ usr.nome }}</option>
+      </select>
+    </div>
+    <div class="col-sm-1">
+      <label for="inputStatus" class="control-label">Situação</label>
+    </div>
+    <div class="col-sm-5">
+      <select class="form-control" id="inputStatus" ng-model="registro.status">
+        <option value="0">Pendente</option>
+        <option value="1">Em desenvolvimento</option>
+        <option value="2">Encerrado</option>
+        <option value="3">Cancelado</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="panel panel-primary" ng-if="registro._id">
+    <div class="panel-heading">
+      <h3 class="panel-title">Itens</h3>
+    </div>
+    <div class="panel-body">
+      <a class="btn btn-success pull-right" ui-sref=".item({'itemId': 'novo'})">
+        <i class="fa fa-plus fa-fw"></i>Novo Item
+      </a>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Resumo</th>
+            <th>Prioridade</th>
+            <th>Responsável</th>
+            <th>Situação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in registro.itens" ng-click="detalheItem(item)">
+            <td>{{ $index }}</td>
+            <td>{{ item.resumo }}</td>
+            <td>{{ getPrioridade(item) }}</td>
+            <td>{{ item.responsavel.nome }}</td>
+            <td>{{ getSituacao(item) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-success pull-right" ng-click="gravar()">
+        <i class="fa fa-fw fa-check"></i>Gravar</button>
+
+      <button type="submit" class="btn btn-danger pull-right" style="margin-right:10px" ng-click="excluir()" ng-if="registro._id">
+        <i class="fa fa-fw fa-trash"></i>Excluir</button>
+
+      <button type="submit" class="btn btn-danger pull-right" style="margin-right:10px" ng-click="voltar()">
+        <i class="fa fa-fw fa-close"></i>Cancelar</button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,18 @@
+<a class="btn btn-success pull-right" ui-sref="atividades.detalhe({'atividadeId': 'novo'})">
+  <i class="fa fa-plus fa-fw"></i>Nova Atividade
+</a>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="ativ in atividades" ng-click="detalhe(ativ)">
+      <td>{{ ativ.nome }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div ui-view></div>

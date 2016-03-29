@@ -1,0 +1,26 @@
+<a class="btn btn-success pull-right" ui-sref="projetos.detalhe({'projetoId': 'novo'})">
+  <i class="fa fa-plus fa-fw"></i>Novo Projeto
+</a>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Deadline</th>
+      <th>Responsável</th>
+      <th>Situação</th>
+      <th>Prioridade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="proj in projetos" ng-click="detalhe(proj)">
+      <td>{{ proj.nome }}</td>
+      <td>{{ proj.deadline | date:'dd/MM/yyyy' }}</td>
+      <td>{{ proj.responsavel.nome }}</td>
+      <td>{{ getSituacao(proj) }}</td>
+      <td>{{ getPrioridade(proj) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div ui-view></div>

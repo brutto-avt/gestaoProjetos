@@ -45,13 +45,7 @@ angular.module('app').controller('UsuariosCtr', function($scope, $rootScope, $ht
     $scope.registro.perfil = parseInt($scope.registro.perfil);
 
     $http[metodo]('./api/usuarios', $scope.registro).then(function (registro) {
-      $scope.registro = registro.data;
-
-      if ($stateParams.usuarioId === 'novo') {
-        $state.go('usuarios.detalhe', {
-          'usuarioId': registro.data._id
-        });
-      }
+      $scope.voltar();
     });
   };
 

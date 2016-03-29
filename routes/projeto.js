@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
   Projeto.find(function(err, projetos) {
     if(err) return next(err);
     res.json(projetos);
-  });
+  }).populate('responsavel');
 });
 
 router.get('/:id', function(req, res, next) {
@@ -25,7 +25,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.get('/:id/itens', function(req, res, next) {
-  var query = ProjetoItem.find({'projeto': req.params.id});
+  var query = ProjetoItem.find({'projeto': req.params.id}).populate('responsavel');
 
   query.exec(function(err, itens) {
     if (err) return next(err);

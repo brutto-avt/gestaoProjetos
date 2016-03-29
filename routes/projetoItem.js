@@ -58,7 +58,7 @@ router.delete('/:id', function(req, res, next) {
 
 // Atividades
 router.get('/:id/atividades', function(req, res, next) {
-  var query = ProjetoItemAtividade.find({'item': req.params.id});
+  var query = ProjetoItemAtividade.find({'item': req.params.id}).populate('atividade');
 
   query.exec(function(err, atividades) {
     if (err) return next(err);
@@ -67,7 +67,7 @@ router.get('/:id/atividades', function(req, res, next) {
 });
 
 router.get('/:id/atividades/:atividadeId', function(req, res, next) {
-  var query = ProjetoItemAtividade.findById(req.params.atividadeId).populate('item projeto');
+  var query = ProjetoItemAtividade.findById(req.params.atividadeId).populate('item').populate('projeto').populate('atividade');
 
   query.exec(function(err, atividade) {
     if (err) return next(err);
@@ -95,7 +95,7 @@ router.post('/:id/atividades', function(req, res, next) {
 });
 
 router.put('/:id/atividades', function(req, res, next) {
-  var atividade = {'_id': req.body._id};
+  var query = {'_id': req.body._id};
 
   ProjetoItemAtividade.findOneAndUpdate(query, req.body, {new: true}, function(err, atividade) {
     if (err) return next(err);
@@ -117,7 +117,7 @@ router.delete('/:id/atividades/:atividadeId', function(req, res, next) {
 
 // Status
 router.get('/:id/status', function(req, res, next) {
-  var query = ProjetoItemStatus.find({'item': req.params.id});
+  var query = ProjetoItemStatus.find({'item': req.params.id}).populate('atividade');
 
   query.exec(function(err, status) {
     if (err) return next(err);
@@ -126,7 +126,7 @@ router.get('/:id/status', function(req, res, next) {
 });
 
 router.get('/:id/status/:statusId', function(req, res, next) {
-  var query = ProjetoItemStatus.findById(req.params.statusId).populate('item usuario');
+  var query = ProjetoItemStatus.findById(req.params.statusId).populate('item').populate('usuario').populate('atividade');
 
   query.exec(function(err, status) {
     if (err) return next(err);
