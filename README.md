@@ -19,10 +19,6 @@ $ node app
 
 ### Todo's
 - Concluir telas básicas
-    - Atividades
-    - Projetos
-    - Itens
-    - Opções
 - Backend para geração de logs automatizados
 - Teste e escolha do algoritmo de recomendação
 - Geração das recomendações
