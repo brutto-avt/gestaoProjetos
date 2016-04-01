@@ -13,6 +13,7 @@ var projeto = require('./routes/projeto');
 var projetoItem = require('./routes/projetoItem');
 var atividade = require('./routes/atividade');
 var log = require('./routes/log');
+var estatistica = require('./routes/estatistica');
 
 mongoose.connect('mongodb://localhost/gestaoProjetos');
 
@@ -35,6 +36,7 @@ app.use('/api/usuarios', usuario);
 app.use('/api/projetos', projeto);
 app.use('/api/itens', projetoItem);
 app.use('/api/logs', log);
+app.use('/api/estatisticas', estatistica);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

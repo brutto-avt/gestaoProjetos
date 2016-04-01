@@ -1,4 +1,4 @@
-angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $http, $state, $stateParams) {
+angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $http, $state, $stateParams, logService) {
   $http.get('./api/usuarios').then(function(usuarios) {
     $scope.lideres = usuarios.data.filter(function(usr) {
       return usr.perfil == 1;
@@ -17,6 +17,7 @@ angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $ht
     if ($stateParams.projetoId !== 'novo') {
       $http.get('./api/projetos/' + $stateParams.projetoId).then(function(projeto) {
         $scope.registro = projeto.data;
+        $scope.registro.logs = [];
         $scope.registro.status = $scope.registro.status.toString();
         $scope.registro.prioridade = $scope.registro.prioridade.toString();
         $scope.registro.deadline = new Date($scope.registro.deadline);
@@ -134,6 +135,7 @@ angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $ht
     $scope.registro.prioridade = parseInt($scope.registro.prioridade);
 
     $http[metodo]('./api/projetos', $scope.registro).then(function(registro) {
+      logService.gravaLogs($scope.registro.logs);
       $scope.voltar();
     });
   };
@@ -164,5 +166,33 @@ angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $ht
     $state.go('.item.estimativas', {
       'itemId': item._id
     });
-  }
+  };
+
+  $scope.$watch('registro.deadline', function (newVal, oldVal) {
+    if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
+      $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('deadlineProjeto') });
+      $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'deadlineProjeto', newVal));
+    }
+  });
+
+  $scope.$watch('registro.prioridade', function (newVal, oldVal) {
+    if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
+      $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('prioridadeProjeto') });
+      $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'prioridadeProjeto', newVal));
+    }
+  });
+
+  $scope.$watch('registro.status', function (newVal, oldVal) {
+    if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
+      $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('situacaoProjeto') });
+      $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'situacaoProjeto', newVal));
+    }
+  });
+
+  $scope.$watch('registro.responsavel', function (newVal, oldVal) {
+    if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
+      $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('responsavelProjeto') });
+      $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'responsavelProjeto', newVal));
+    }
+  });
 });
