@@ -1,4 +1,4 @@
-<div class="col-sm-4">
+<div class="col-sm-4" ng-if="estatisticas.length">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Situação dos projetos</h3>
@@ -12,47 +12,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-success">
-            <td>Projeto 1</td>
-            <td>Regular</td>
-          </tr>
-          <tr class="bg-warning">
-            <td>Projeto 2</td>
-            <td>Em risco</td>
-          </tr>
-          <tr class="bg-danger">
-            <td>Projeto 3</td>
-            <td>Atrasado</td>
+          <tr ng-class="getClasse(est.situacao)" ng-repeat="est in estatisticas">
+            <td>{{ est.nome }}</td>
+            <td>{{ getSituacao(est.situacao) }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-<div class="col-sm-4">
+
+<div class="col-sm-4" ng-if="estatisticas.length">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Andamento dos projetos</h3>
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-4">
-          <img src="img/grafico1.jpg" class="img-responsive">
-          <p class="text-center">Projeto 1</p>
-        </div>
-        <div class="col-sm-4">
-          <img src="img/grafico2.jpg" class="img-responsive">
-          <p class="text-center">Projeto 2</p>
-        </div>
-        <div class="col-sm-4">
-          <img src="img/grafico3.jpg" class="img-responsive">
-          <p class="text-center">Projeto 3</p>
-        </div>
+        <figure ng-repeat="est in estatisticas">
+          <div class="gauge">
+            <div class="meter" style="transform:rotate({{(est.percConcluido / 100) / 2}}turn); background: {{ getCorPerc(est.percConcluido) }}"></div>
+          </div>
+          <figcaption>{{ est.nome }}</figcaption>
+        </figure>
       </div>
     </div>
   </div>
 </div>
-<div class="col-sm-4">
+
+<div class="col-sm-4" ng-if="equipe.length">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Situação da equipe</h3>
@@ -62,25 +50,13 @@
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Atividade</th>
             <th>Tempo</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Pessoa 1</td>
-            <td>Atividade A</td>
-            <td>01:20</td>
-          </tr>
-          <tr>
-            <td>Pessoa 2</td>
-            <td>Livre</td>
-            <td>00:00</td>
-          </tr>
-          <tr>
-            <td>Pessoa 3</td>
-            <td>Atividade B</td>
-            <td>06:00</td>
+          <tr ng-repeat="pess in equipe">
+            <td>{{ pess.nome }}</td>
+            <td>{{ pess.horas }} h</td>
           </tr>
         </tbody>
       </table>

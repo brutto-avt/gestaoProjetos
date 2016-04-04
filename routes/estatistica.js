@@ -28,9 +28,41 @@ router.get('/:responsavel', function(req, res, next) {
         callBack(null, ret);
       });
     }, function(err, projetos) {
+      projetos.forEach(function (proj) {
+        var percConcluido = 0;
+        var itensConcluidos = 0;
+        var limite = (new Date() - proj.deadline) / (1000 * 60 * 60 * 24);
+
+        proj.equipe = {};
+
+        proj.itens.forEach(function(item) {
+          if ([2,3].indexOf(item.status)) {
+            itensConcluidos += 1;
+          }
+
+          if (!proj.equipe.hasOwnProperty(item.responsavel)) {
+            proj.equipe[item.responsavel] = 0;
+          }
+
+          item.atualizacoes.forEach(function (at) {
+            proj.equipe[item.responsavel] += at.horasUsadas;
+          });
+        });
+
+        proj.percConcluido = (itensConcluidos * 100) / proj.itens.length;
+
+        if (proj.deadline < new Date()) {
+          proj.situacao = 'A';
+        } else if (proj.percConcluido < 90 && limite <= 3) {
+          proj.situacao = 'R';
+        } else {
+          proj.situacao = 'N';
+        }
+      });
+
       res.json(projetos);
     });
-  }).select('_id, deadline prioridade status');
+  }).select('_id, deadline prioridade status nome');
 });
 
 var populaItens = function (projeto) {
