@@ -13,7 +13,7 @@ var ProjetoItemStatus = mongoose.model('ProjetoItemStatus');
 var router = express.Router();
 
 router.get('/:responsavel?', function(req, res, next) {
-  params = {}
+  var params = {}
   if (req.params.resposavel) params.responsavel = req.params.responsavel;
 
   Projeto.find(params, function(err, projetos) {
@@ -89,7 +89,6 @@ router.get('/:responsavel?', function(req, res, next) {
             item.situacao = 'N';
           }
 
-          delete item._id;
           delete item.atividades;
           delete item.atualizacoes;
         });
@@ -109,8 +108,6 @@ router.get('/:responsavel?', function(req, res, next) {
         } else {
           proj.situacao = 'N';
         }
-
-        delete proj._id;
       });
 
       if (req.query.ultimos) {
