@@ -14,7 +14,7 @@ var projetoItem = require('./routes/projetoItem');
 var atividade = require('./routes/atividade');
 var log = require('./routes/log');
 var estatistica = require('./routes/estatistica');
-var recomendacoes = require('./routes/recomendacoes.tree');
+var recomendacoes = require('./routes/recomendacoes');
 
 mongoose.connect('mongodb://localhost/gestaoProjetos');
 

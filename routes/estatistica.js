@@ -14,8 +14,7 @@ var router = express.Router();
 
 router.get('/:responsavel?', function(req, res, next) {
   var params = {}
-  if (req.params.resposavel) params.responsavel = req.params.responsavel;
-
+  if (req.params.responsavel) params.responsavel = req.params.responsavel;
   Projeto.find(params, function(err, projetos) {
     if (!projetos.length) {
       res.json([]);
@@ -72,8 +71,12 @@ router.get('/:responsavel?', function(req, res, next) {
 
             proj['horasEstimadas' + ativ.atividade] += ativ.avaliacao;
           });
-
-          item.percConcluido = item.atualizacoes[item.atualizacoes.length - 1].percConcluido;
+          
+          if (item.atualizacoes.length) {
+            item.percConcluido = item.atualizacoes[item.atualizacoes.length - 1].percConcluido;
+          } else {
+            item.percConcluido = 0;
+          }
           item.diasRestantes = calculaData(new Date(), item.deadline);
           item.horasUsadas = usadasItem;
           item.horasEstimadas = estimadasItem;

@@ -45,9 +45,7 @@ angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $ht
         });
       });
     } else {
-      $scope.registro = {
-        projeto: $scope.registro._id
-      };
+      $scope.registro = {};
     }
   }
 

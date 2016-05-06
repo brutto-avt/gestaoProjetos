@@ -18,6 +18,7 @@ angular.module('app').factory('logService', function($http, $cookies) {
       return ACOES[acao];
     },
     gravaLogs: function(logs) {
+      if (!logs) return;
       logs.forEach(function(log) {
         $http.post('./api/logs', log);
       });
