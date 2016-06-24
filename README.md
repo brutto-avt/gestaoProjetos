@@ -18,5 +18,4 @@ $ node app
 ```
 
 ### Todo's
-- Teste e escolha do algoritmo de recomendação
 - Geração das recomendações
