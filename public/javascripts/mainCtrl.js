@@ -40,6 +40,23 @@ angular.module('app').controller('MainCtrl', function($scope, $rootScope, $timeo
     }
   };
 
+  $scope.getPrioridade = function(prioridade) {
+    switch (prioridade) {
+      case 0:
+        return 'Baixa';
+        break;
+      case 1:
+        return 'Média';
+        break;
+      case 2:
+        return 'Alta';
+        break;
+      case 3:
+        return 'Urgente';
+        break;
+    }
+  };
+
   $scope.getClasse = function (situacao) {
     switch (situacao) {
       case 'N':
@@ -68,20 +85,7 @@ angular.module('app').controller('MainCtrl', function($scope, $rootScope, $timeo
     if (!$cookies.get('usuario')) return;
 
     $http.get('./api/estatisticas/' + $cookies.get('usuario')).then(function (estatisticas) {
-      estatisticas = estatisticas.data;
-
-      estatisticas.forEach(function (projeto) {
-        Object.keys(projeto.equipe).forEach(function (membro) {
-          $http.get('./api/usuarios/' + membro).then(function(dadosMembro) {
-            $scope.equipe.push({
-              horas: projeto.equipe[membro],
-              nome: dadosMembro.data.nome
-            });
-          });
-        });
-      });
-
-      $scope.estatisticas = estatisticas;
+      $scope.estatisticas = estatisticas.data;
     });
   };
 

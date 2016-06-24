@@ -7,14 +7,7 @@ var ACOES = [
   'prioridadeProjeto',
   'deadlineProjeto',
   'responsavelProjeto',
-  'situacaoProjeto',
-  'prioridadeItem',
-  'responsavelItem',
-  'deadlineItem',
-  'situacaoItem',
-  'estimativaItem',
-  'percItem',
-  'horasItem'
+  'situacaoProjeto'
 ];
 
 router.get('/:usuario', function(req, res, next) {

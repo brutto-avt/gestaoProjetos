@@ -30,73 +30,114 @@ router.get('/:responsavel?', function(req, res, next) {
     }, function(err, projetos) {
       projetos.forEach(function(proj) {
         var percConcluido = 0;
-        var itensConcluidos = 0;
         var totalUsadas = 0;
         var totalEstimadas = 0;
         var limite = (new Date() - proj.deadline) / (1000 * 60 * 60 * 24);
 
+        proj.itensPriorBaixa = 0;
+        proj.itensPriorMedia = 0;
+        proj.itensPriorAlta = 0;
+        proj.itensPriorUrgente = 0;
+
+        proj.itensSitPendente = 0;
+        proj.itensSitDesenvolv = 0;
+        proj.itensSitEncerrado = 0;
+        proj.itensSitCancelado = 0;
+
+        proj.itensAtrasados = 0;
+        proj.itensRisco = 0;
+        proj.itensNormais = 0;
+
+        proj.horasUsadasPorItem = 0;
+        proj.horasEstimadasPorItem = 0;
+        proj.razaoEstimativaPorItem = 0;
+
+        proj.horasUsadasPorMembro = 0;
+        proj.horasEstimadasPorMembro = 0;
+        proj.razaoEstimativaPorMembro = 0;
+
         proj.equipe = {};
 
         proj.itens.forEach(function(item) {
-          var usadasItem = 0;
-          var estimadasItem = 0;
+          item.horasUsadas = 0;
+          item.horasEstimadas = 0;
 
-          if ([2, 3].indexOf(item.status)) {
-            itensConcluidos += 1;
+          switch (item.prioridade) {
+            case 0:
+              proj.itensPriorBaixa += 1;
+              break;
+            case 1:
+              proj.itensPriorMedia += 1;
+              break;
+            case 2:
+              proj.itensPriorAlta += 1;
+              break;
+            case 3:
+              proj.itensPriorUrgente += 1;
+              break;
+          }
+
+          switch (item.status) {
+            case 0:
+              proj.itensSitPendente += 1;
+              break;
+            case 1:
+              proj.itensSitDesenvolv += 1;
+              break;
+            case 2:
+              proj.itensSitEncerrado += 1;
+              break;
+            case 3:
+              proj.itensSitCancelado += 1;
+              break;
           }
 
           if (!proj.equipe.hasOwnProperty(item.responsavel)) {
-            proj.equipe[item.responsavel] = 0;
+            proj.equipe[item.responsavel] = {
+              horasUsadas: 0,
+              horasEstimadas: 0
+            };
           }
 
           item.atualizacoes.forEach(function(at) {
-            proj.equipe[item.responsavel] += at.horasUsadas;
+            proj.equipe[item.responsavel].horasUsadas += at.horasUsadas;
+
             totalUsadas += at.horasUsadas;
-            usadasItem += at.horasUsadas;
-
-            if (!proj.hasOwnProperty('horasUsadas' + at.atividade)) {
-              proj['horasUsadas' + at.atividade] = 0;
-            }
-
-            proj['horasUsadas' + at.atividade] += at.horasUsadas;
+            item.horasUsadas += at.horasUsadas;
           });
 
           item.atividades.forEach(function(ativ) {
+            proj.equipe[item.responsavel].horasEstimadas += ativ.avaliacao;
+
             totalEstimadas += ativ.avaliacao;
-            estimadasItem += ativ.avaliacao;
-
-            if (!proj.hasOwnProperty('horasEstimadas' + ativ.atividade)) {
-              proj['horasEstimadas' + ativ.atividade] = 0;
-            }
-
-            proj['horasEstimadas' + ativ.atividade] += ativ.avaliacao;
+            item.horasEstimadas += ativ.avaliacao;
           });
-          
-          if (item.atualizacoes.length) {
-            item.percConcluido = item.atualizacoes[item.atualizacoes.length - 1].percConcluido;
-          } else {
-            item.percConcluido = 0;
-          }
-          item.diasRestantes = calculaData(new Date(), item.deadline);
-          item.horasUsadas = usadasItem;
-          item.horasEstimadas = estimadasItem;
-          if (estimadasItem > 0) {
-            item.razaoEstimativa = Math.floor(usadasItem / estimadasItem);
-          }
 
           if (item.deadline < new Date()) {
-            item.situacao = 'A';
+            proj.itensAtrasados += 1;
           } else if (item.percConcluido < 90 && limite <= 3) {
-            item.situacao = 'R';
+            proj.itensRisco += 1;
           } else {
-            item.situacao = 'N';
+            proj.itensNormais += 1;
           }
 
           delete item.atividades;
           delete item.atualizacoes;
         });
 
-        proj.percConcluido = (itensConcluidos * 100) / proj.itens.length;
+        proj.horasUsadasPorItem = totalUsadas / proj.itens.length;
+        proj.horasEstimadasPorItem = totalEstimadas / proj.itens.length;
+        if (proj.horasEstimadasPorItem > 0) {
+          proj.razaoEstimativaPorItem = Math.floor(proj.horasUsadasPorItem / proj.horasEstimadasPorItem);
+        }
+
+        proj.horasUsadasPorMembro = totalUsadas / Object.keys(proj.equipe).length;
+        proj.horasEstimadasPorMembro = totalEstimadas / Object.keys(proj.equipe).length;
+        if (proj.horasEstimadasPorMembro > 0) {
+          proj.razaoEstimativaPorMembro = Math.floor(proj.horasUsadasPorMembro / proj.horasEstimadasPorMembro);
+        }
+
+        proj.percConcluido = (proj.itensSitEncerrado * 100) / proj.itens.length;
         proj.horasUsadas = totalUsadas;
         proj.horasEstimadas = totalEstimadas;
         if (totalEstimadas > 0) {
@@ -111,6 +152,9 @@ router.get('/:responsavel?', function(req, res, next) {
         } else {
           proj.situacao = 'N';
         }
+
+        delete proj.itens;
+        delete proj.equipe;
       });
 
       if (req.query.ultimos) {
