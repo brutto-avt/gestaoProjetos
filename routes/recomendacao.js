@@ -35,7 +35,8 @@ router.get('/gerar', function(req, res, next) {
 
 router.get('/:usuario', function(req, res, next) {
   var query = Recomendacao.find({
-    usuario: req.params.usuario
+    usuario: req.params.usuario,
+    visualizada: false
   }).populate('usuario');
 
   query.exec(function(err, recs) {
@@ -46,10 +47,10 @@ router.get('/:usuario', function(req, res, next) {
 
 router.put('/', function(req, res, next) {
   var query = {
-    '_id': req.body._id
+    '_id': req.body.data._id
   };
 
-  Recomendacao.findOneAndUpdate(query, req.body, {
+  Recomendacao.findOneAndUpdate(query, req.body.data, {
     new: true
   }, function(err, rec) {
     if (err) return next(err);

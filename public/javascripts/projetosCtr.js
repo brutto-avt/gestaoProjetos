@@ -174,14 +174,14 @@ angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $ht
   });
 
   $scope.$watch('registro.prioridade', function (newVal, oldVal) {
-    if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
+    if ($scope.registro && $scope.registro.logs && oldVal && +oldVal !== +newVal) {
       $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('prioridadeProjeto') });
       $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'prioridadeProjeto', newVal));
     }
   });
 
   $scope.$watch('registro.status', function (newVal, oldVal) {
-    if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
+    if ($scope.registro && $scope.registro.logs && oldVal && +oldVal !== +newVal) {
       $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('situacaoProjeto') });
       $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'situacaoProjeto', newVal));
     }

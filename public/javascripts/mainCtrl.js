@@ -89,6 +89,22 @@ angular.module('app').controller('MainCtrl', function($scope, $rootScope, $timeo
     });
   };
 
+  $scope.buscarRecomendacoes = function() {
+    if (!$cookies.get('usuario')) return;
+
+    toastr.options.closeButton = true;
+    toastr.options.positionClass = 'toast-bottom-right';
+
+    $http.get('./api/recomendacoes/' + $cookies.get('usuario')).then(function (recomendacoes) {
+      recomendacoes.data.forEach(function(rec) {
+        toastr.info(rec.decisao, 'Atenção');
+
+        rec.visualizada = true;
+        $http.put('./api/recomendacoes', {data: rec});
+      });
+    });
+  };
+
   $rootScope.$on('$stateChangeStart', function(evt, toState, toParams, fromState, fromParams) {
     if (toState.name === 'login' && $scope.usuario) {
       evt.preventDefault();
@@ -100,6 +116,7 @@ angular.module('app').controller('MainCtrl', function($scope, $rootScope, $timeo
     }
     if (toState.name === 'inicio') {
       $scope.buscarEstatisticas();
+      $scope.buscarRecomendacoes();
     }
   });
 });
