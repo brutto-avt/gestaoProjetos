@@ -32,7 +32,6 @@ router.get('/:responsavel?', function(req, res, next) {
         var percConcluido = 0;
         var totalUsadas = 0;
         var totalEstimadas = 0;
-        var limite = (new Date() - proj.deadline) / (1000 * 60 * 60 * 24);
 
         proj.itensPriorBaixa = 0;
         proj.itensPriorMedia = 0;
@@ -55,6 +54,8 @@ router.get('/:responsavel?', function(req, res, next) {
         proj.horasUsadasPorMembro = 0;
         proj.horasEstimadasPorMembro = 0;
         proj.razaoEstimativaPorMembro = 0;
+
+        proj.diasRestantes = calculaData(new Date(), proj.deadline);
 
         proj.equipe = {};
 
@@ -115,7 +116,7 @@ router.get('/:responsavel?', function(req, res, next) {
 
           if (item.deadline < new Date()) {
             proj.itensAtrasados += 1;
-          } else if (item.percConcluido < 90 && limite <= 3) {
+          } else if (item.percConcluido < 90 && proj.diasRestantes <= 3) {
             proj.itensRisco += 1;
           } else {
             proj.itensNormais += 1;
@@ -128,26 +129,25 @@ router.get('/:responsavel?', function(req, res, next) {
         proj.horasUsadasPorItem = totalUsadas / proj.itens.length;
         proj.horasEstimadasPorItem = totalEstimadas / proj.itens.length;
         if (proj.horasEstimadasPorItem > 0) {
-          proj.razaoEstimativaPorItem = Math.floor(proj.horasUsadasPorItem / proj.horasEstimadasPorItem);
+          proj.razaoEstimativaPorItem = Math.floor((proj.horasUsadasPorItem / proj.horasEstimadasPorItem) * 100);
         }
 
         proj.horasUsadasPorMembro = totalUsadas / Object.keys(proj.equipe).length;
         proj.horasEstimadasPorMembro = totalEstimadas / Object.keys(proj.equipe).length;
         if (proj.horasEstimadasPorMembro > 0) {
-          proj.razaoEstimativaPorMembro = Math.floor(proj.horasUsadasPorMembro / proj.horasEstimadasPorMembro);
+          proj.razaoEstimativaPorMembro = Math.floor((proj.horasUsadasPorMembro / proj.horasEstimadasPorMembro) * 100);
         }
 
         proj.percConcluido = (proj.itensSitEncerrado * 100) / proj.itens.length;
         proj.horasUsadas = totalUsadas;
         proj.horasEstimadas = totalEstimadas;
         if (totalEstimadas > 0) {
-          proj.razaoEstimativa = Math.floor(totalUsadas / totalEstimadas);
+          proj.razaoEstimativa = Math.floor((totalUsadas / totalEstimadas) * 100);
         }
-        proj.diasRestantes = calculaData(new Date(), proj.deadline);
 
         if (proj.deadline < new Date()) {
           proj.situacao = 'A';
-        } else if (proj.percConcluido < 90 && limite <= 3) {
+        } else if (proj.percConcluido < 90 && proj.diasRestantes <= 3) {
           proj.situacao = 'R';
         } else {
           proj.situacao = 'N';
@@ -163,9 +163,13 @@ router.get('/:responsavel?', function(req, res, next) {
           trintaDias.setDate(trintaDias.getDate() - 30);
           return proj.deadline >= trintaDias;
         }));
+      } else if (req.params.responsavel) {
+        res.json(projetos.filter(function(proj) {
+          return [0,1].indexOf(proj.status) > -1;
+        }));
+      } else {
+        res.json(projetos);
       }
-
-      res.json(projetos);
     });
   }).select('_id, deadline prioridade status nome');
 });

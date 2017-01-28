@@ -1,3 +1,11 @@
+angular.module('app').filter('pendentes', function() {
+  return function(arr) {
+    return arr.filter(function(item) {
+      return [0,1].indexOf(item.status) > -1;
+    });
+  };
+});
+
 angular.module('app').controller('ItensCtr', function($scope, $rootScope, $http, $state, $stateParams, $timeout) {
   if (!$stateParams.atividadeId) {
     delete $scope.atualizacao;

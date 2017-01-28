@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="item in itens" ng-click="detalhe(item)">
+    <tr ng-repeat="item in itens|pendentes" ng-click="detalhe(item)">
       <td>{{ item.resumo }}</td>
       <td>{{ item.deadline | date:'dd/MM/yyyy' }}</td>
       <td>{{ item.responsavel.nome }}</td>

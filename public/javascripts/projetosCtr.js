@@ -169,7 +169,7 @@ angular.module('app').controller('ProjetosCtr', function($scope, $rootScope, $ht
   $scope.$watch('registro.deadline', function (newVal, oldVal) {
     if ($scope.registro && $scope.registro.logs && oldVal && oldVal !== newVal) {
       $scope.registro.logs = $scope.registro.logs.filter(function (log) { return log.acao !== logService.getIdAcao('deadlineProjeto') });
-      $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'deadlineProjeto', newVal));
+      $scope.registro.logs.push(logService.criaLog($scope.registro._id, 'deadlineProjeto', newVal, oldVal));
     }
   });
 

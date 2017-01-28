@@ -82,7 +82,7 @@ var gerarRecomendacoes = function(responsavel) {
               delete est['nome'];
               est.acao = acao;
               est.usuario = responsavel;
-
+              
               getDesicaoStr(acao, referencia, dt.predict(est)).then(function(descricao) {
                 if (!descricao) {
                   callBack(null, null);
@@ -220,7 +220,7 @@ var getPrioridade = function(prior) {
 
 var getResponsavel = function(resp) {
   var promise = new Promise(function(resolve, reject) {
-    var query = Usuario.findById(resp);
+    var query = Usuario.findById(mongoose.Types.ObjectId(resp));
 
     query.exec(function(err, usuario) {
       if (err) resolve(undefined);
@@ -234,7 +234,7 @@ var getResponsavel = function(resp) {
 
 var getProjeto = function(proj) {
   var promise = new Promise(function(resolve, reject) {
-    var query = Projeto.findById(proj);
+    var query = Projeto.findById(mongoose.Types.ObjectId(proj));
 
     query.exec(function(err, projeto) {
       if (err) resolve(undefined);

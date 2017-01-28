@@ -2,7 +2,7 @@ require('../models/projetoItem');
 require('../models/log');
 
 var mongoose = require('mongoose');
-var Projeto = mongoose.model('ProjetoItem');
+var ProjetoItem = mongoose.model('ProjetoItem');
 var Log = mongoose.model('Log');
 
 var ProjetoSchema = new mongoose.Schema({

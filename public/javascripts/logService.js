@@ -26,7 +26,14 @@ angular.module('app').factory('logService', function($http, $cookies) {
         });
       });
     },
-    criaLog: function(referencia, acao, decisao) {
+    criaLog: function(referencia, acao, decisao, antigo) {
+      var diferencaMilis;
+      
+      if (acao === 'deadlineProjeto') {
+        diferencaMilis = Math.abs(decisao.getTime() - antigo.getTime());
+        decisao = Math.ceil(diferencaMilis / (1000 * 3600 * 24));
+      }
+
       return {
         referencia: referencia,
         acao: ACOES[acao],
