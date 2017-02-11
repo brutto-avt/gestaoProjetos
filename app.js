@@ -14,7 +14,7 @@ var projetoItem = require('./routes/projetoItem');
 var atividade = require('./routes/atividade');
 var log = require('./routes/log');
 var estatistica = require('./routes/estatistica');
-var recomendacao = require('./routes/recomendacao');
+var recomendacao = require('./routes/recomendacaoc45');
 
 mongoose.connect('mongodb://localhost/gestaoProjetos');
 
@@ -72,6 +72,6 @@ app.use(function(err, req, res, next) {
 
 server.listen(8080);
 
-console.log('Servidor rodando na porta 8080')
+console.log('Servidor rodando na porta 8080');
 
 module.exports = app;

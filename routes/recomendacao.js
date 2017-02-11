@@ -29,7 +29,7 @@ router.get('/gerar', function(req, res, next) {
       });
     }, function() {
       res.end('Recomendações geradas.');
-    })
+    });
   });
 });
 
@@ -66,13 +66,12 @@ var gerarRecomendacoes = function(responsavel) {
         resolve(0);
       } else {
         var colunas = Object.keys(logs[0]);
-        var recomendacoes = [];
 
         obterEstatisticas(responsavel).then(function(estats) {
           async.map(estats, function(est, callBack) {
             ACOES.forEach(function(acao) {
               var logsAcao = logs.filter(function(l) {
-                return l.acao == acao
+                return l.acao === acao;
               });
               var referencia = '' + est['_id'];
               if (!logsAcao.length) resolve([]);
@@ -115,7 +114,7 @@ var obterLogs = function(responsavel) {
     var dados;
 
     request('http://localhost:8080/api/logs/usuario/' + responsavel, function(err, res, body) {
-      if (!err && res.statusCode == 200) {
+      if (!err && res.statusCode === 200) {
         resolve(JSON.parse(body));
       } else {
         resolve([]);
@@ -131,7 +130,7 @@ var obterEstatisticas = function(responsavel) {
     var dados;
 
     request('http://localhost:8080/api/estatisticas/' + responsavel, function(err, res, body) {
-      if (!err && res.statusCode == 200) {
+      if (!err && res.statusCode === 200) {
         dados = JSON.parse(body);
         resolve(dados);
       } else {
@@ -148,14 +147,14 @@ var getDesicaoStr = function(acao, referencia, decisao) {
     getProjeto(referencia).then(function(projeto) {
       switch (acao) {
         case 'prioridadeProjeto':
-          if (projeto.prioridade == decisao) {
+          if (projeto.prioridade === decisao) {
             resolve(undefined);
           } else {
             resolve('Considere alterar a prioridade do projeto ' + projeto.nome + ' para ' + getPrioridade(decisao));
           }
           break;
         case 'deadlineProjeto':
-          if (projeto.deadline == decisao) {
+          if (projeto.deadline === decisao) {
             resolve(undefined);
           } else {
             resolve('Considere alterar o deadline do projeto ' + projeto.nome + ' para ' + decisao);
@@ -163,7 +162,7 @@ var getDesicaoStr = function(acao, referencia, decisao) {
           break;
         case 'responsavelProjeto':
           getResponsavel(decisao).then(function(novoResponsavel) {
-            if (projeto.responsavel == decisao) {
+            if (projeto.responsavel === decisao) {
               resolve(undefined);
             } else {
               resolve('Considere transferir o projeto ' + projeto.nome + ' para ' + novoResponsavel);
@@ -171,7 +170,7 @@ var getDesicaoStr = function(acao, referencia, decisao) {
           });
           break;
         case 'situacaoProjeto':
-          if (projeto.status == decisao) {
+          if (projeto.status === decisao) {
             resolve(undefined);
           } else {
             resolve('Considere alterar a situação do projeto ' + projeto.nome + ' para ' + getSituacao(decisao));
@@ -233,7 +232,7 @@ var getResponsavel = function(resp) {
 };
 
 var getProjeto = function(proj) {
-  var promise = new Promise(function(resolve, reject) {
+  var promise = new Promise(function(resolve) {
     var query = Projeto.findById(mongoose.Types.ObjectId(proj));
 
     query.exec(function(err, projeto) {
