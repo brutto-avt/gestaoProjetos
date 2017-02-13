@@ -137,13 +137,14 @@ var gerarRecomendacoes = function (responsavel) {
 
                     converterObjeto(est).then(function (estConvertido) {
                       modelo.calcAccuracy(convertidos.teste, alvos, function(precisao) {
-                        getDesicaoStr(precisao, acao, referencia, modelo.classify(estConvertido)).then(function (descricao) {
+                        getDesicaoStr(acao, referencia, modelo.classify(estConvertido)).then(function (descricao) {
                           if (descricao) {
                             var recomendacao = new Recomendacao({
                               usuario: responsavel,
                               referencia: referencia,
                               decisao: descricao,
-                              visualizada: false
+                              visualizada: false,
+                              precisao: precisao
                             });
 
                             recomendacao.save(function (err, rec) {
@@ -197,23 +198,22 @@ var obterEstatisticas = function (responsavel) {
   return promise;
 };
 
-var getDesicaoStr = function (precisao, acao, referencia, decisao) {
+var getDesicaoStr = function (acao, referencia, decisao) {
   var promise = new Promise(function (resolve) {
-    var precisaoStr = ' [' + (precisao * 100) + '%]';
     getProjeto(referencia).then(function (projeto) {
       switch (acao) {
         case 'prioridadeProjeto':
           if (projeto.prioridade === decisao) {
             resolve(undefined);
           } else {
-            resolve('Considere alterar a prioridade do projeto ' + projeto.nome + ' para ' + getPrioridade(decisao) + precisaoStr);
+            resolve('Considere alterar a prioridade do projeto ' + projeto.nome + ' para ' + getPrioridade(decisao));
           }
           break;
         case 'deadlineProjeto':
           if (projeto.deadline === decisao) {
             resolve(undefined);
           } else {
-            resolve('Considere aumentar o deadline do projeto ' + projeto.nome + ' em ' + decisao + ' dias' + precisaoStr);
+            resolve('Considere aumentar o deadline do projeto ' + projeto.nome + ' em ' + decisao + ' dias');
           }
           break;
         case 'responsavelProjeto':
@@ -221,7 +221,7 @@ var getDesicaoStr = function (precisao, acao, referencia, decisao) {
             if (projeto.responsavel === decisao) {
               resolve(undefined);
             } else {
-              resolve('Considere transferir o projeto ' + projeto.nome + ' para ' + novoResponsavel + precisaoStr);
+              resolve('Considere transferir o projeto ' + projeto.nome + ' para ' + novoResponsavel);
             }
           });
           break;
@@ -229,7 +229,7 @@ var getDesicaoStr = function (precisao, acao, referencia, decisao) {
           if (projeto.status === decisao) {
             resolve(undefined);
           } else {
-            resolve('Considere alterar a situação do projeto ' + projeto.nome + ' para ' + getSituacao(decisao) + precisaoStr);
+            resolve('Considere alterar a situação do projeto ' + projeto.nome + ' para ' + getSituacao(decisao));
           }
           break;
       }
