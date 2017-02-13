@@ -115,8 +115,12 @@ var gerarRecomendacoes = function (responsavel) {
               if (!logsAcao.length) resolve([]);
 
               converterArray(logsAcao).then(function (convertidos) {
+                var alvos = [];
                 var c45 = C45();
                 convertidos = dividirConjunto(convertidos);
+                alvos = convertidos.teste.map(function(t) {
+                  return t[colunas.indexOf('decisao')]
+                });
                 
                 c45.train({
                   data: convertidos.treino,
@@ -132,7 +136,7 @@ var gerarRecomendacoes = function (responsavel) {
                     est['decisao'] = null;
 
                     converterObjeto(est).then(function (estConvertido) {
-                      modelo.calcAccuracy(convertidos.teste, function(precisao) {
+                      modelo.calcAccuracy(convertidos.teste, alvos, function(precisao) {
                         getDesicaoStr(precisao, acao, referencia, modelo.classify(estConvertido)).then(function (descricao) {
                           if (descricao) {
                             var recomendacao = new Recomendacao({
@@ -342,7 +346,7 @@ var dividirConjunto = function(arr) {
   var corte = parseInt(tot * 0.7);
   return {
     treino: arr.slice(0, corte),
-    teste: arr.slice(corte)
+    teste: arr.slice(corte),
   };
 };
 
