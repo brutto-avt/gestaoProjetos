@@ -116,9 +116,10 @@ var gerarRecomendacoes = function (responsavel) {
 
               converterArray(logsAcao).then(function (convertidos) {
                 var c45 = C45();
+                convertidos = dividirConjunto(convertidos);
                 
                 c45.train({
-                  data: convertidos,
+                  data: convertidos.treino,
                   target: 'decisao',
                   features: colunas,
                   featureTypes: TIPOS
@@ -131,20 +132,22 @@ var gerarRecomendacoes = function (responsavel) {
                     est['decisao'] = null;
 
                     converterObjeto(est).then(function (estConvertido) {
-                      getDesicaoStr(acao, referencia, modelo.classify(estConvertido)).then(function (descricao) {
-                        if (descricao) {
-                          var recomendacao = new Recomendacao({
-                            usuario: responsavel,
-                            referencia: referencia,
-                            decisao: descricao,
-                            visualizada: false
-                          });
+                      modelo.calcAccuracy(convertidos.teste, function(precisao) {
+                        getDesicaoStr(precisao, acao, referencia, modelo.classify(estConvertido)).then(function (descricao) {
+                          if (descricao) {
+                            var recomendacao = new Recomendacao({
+                              usuario: responsavel,
+                              referencia: referencia,
+                              decisao: descricao,
+                              visualizada: false
+                            });
 
-                          recomendacao.save(function (err, rec) {
-                            if (err) console.trace(err);
-                          });
-                        }
-                      });
+                            recomendacao.save(function (err, rec) {
+                              if (err) console.trace(err);
+                            });
+                          }
+                        });
+                      });                      
                     });
                   }
                 });
@@ -190,22 +193,23 @@ var obterEstatisticas = function (responsavel) {
   return promise;
 };
 
-var getDesicaoStr = function (acao, referencia, decisao) {
+var getDesicaoStr = function (precisao, acao, referencia, decisao) {
   var promise = new Promise(function (resolve) {
+    var precisaoStr = ' [' + (precisao * 100) + '%]';
     getProjeto(referencia).then(function (projeto) {
       switch (acao) {
         case 'prioridadeProjeto':
           if (projeto.prioridade === decisao) {
             resolve(undefined);
           } else {
-            resolve('Considere alterar a prioridade do projeto ' + projeto.nome + ' para ' + getPrioridade(decisao));
+            resolve('Considere alterar a prioridade do projeto ' + projeto.nome + ' para ' + getPrioridade(decisao) + precisaoStr);
           }
           break;
         case 'deadlineProjeto':
           if (projeto.deadline === decisao) {
             resolve(undefined);
           } else {
-            resolve('Considere aumentar o deadline do projeto ' + projeto.nome + ' em ' + decisao + ' dias');
+            resolve('Considere aumentar o deadline do projeto ' + projeto.nome + ' em ' + decisao + ' dias' + precisaoStr);
           }
           break;
         case 'responsavelProjeto':
@@ -213,7 +217,7 @@ var getDesicaoStr = function (acao, referencia, decisao) {
             if (projeto.responsavel === decisao) {
               resolve(undefined);
             } else {
-              resolve('Considere transferir o projeto ' + projeto.nome + ' para ' + novoResponsavel);
+              resolve('Considere transferir o projeto ' + projeto.nome + ' para ' + novoResponsavel + precisaoStr);
             }
           });
           break;
@@ -221,7 +225,7 @@ var getDesicaoStr = function (acao, referencia, decisao) {
           if (projeto.status === decisao) {
             resolve(undefined);
           } else {
-            resolve('Considere alterar a situação do projeto ' + projeto.nome + ' para ' + getSituacao(decisao));
+            resolve('Considere alterar a situação do projeto ' + projeto.nome + ' para ' + getSituacao(decisao) + precisaoStr);
           }
           break;
       }
@@ -331,6 +335,15 @@ var converterObjeto = function (obj) {
       }
     }
   });
+};
+
+var dividirConjunto = function(arr) {
+  var tot = arr.length;
+  var corte = parseInt(tot * 0.7);
+  return {
+    treino: arr.slice(0, corte),
+    teste: arr.slice(corte)
+  };
 };
 
 module.exports = router;
